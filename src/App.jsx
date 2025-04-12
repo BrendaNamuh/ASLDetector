@@ -60,7 +60,7 @@ function App() {
         <div className="flex flex-col rounded-2xl h-full px-5 w-[600px] relative ">
 
           <div className={`mx-5 text-base/10  text-[25px] absolute top-0 left-0 h-[220px]  z-10 transition-opacity duration-3000 ${showText ? "opacity-100" : "opacity-0"} `}>
-          Hand2Text translates American Sign Language (ASL) into text using a random forest model. Click 'Turn on Camera' and start signing to see your gestures translated in real time. Press backspace to delete the last letter.
+          The ASL Detector translates American Sign Language (ASL) into text using a random forest model. Click 'Turn on Camera' and start signing to translate your gestures in real time. Press backspace to delete the latest letter.
           </div>
 
             <div className={`mt-auto shadow-2xs h-[430px] w-full   border-[#4986b83d] translate-y-[10%] transition-opacity duration-4000 ${showText ? "opacity-100" : "opacity-0"}`} >
