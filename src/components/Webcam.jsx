@@ -1,26 +1,10 @@
-// import React, { useState } from 'react';
-
-// function Webcam() {
-//   const [isCameraOn, setIsCameraOn] = useState(true);
-
-//   const startCamera = () => {
-//     setIsCameraOn(true);
-//   };
-
-//   return (
-//     <img className="w-full h-full object-cover" src="http://localhost:5000/video_feed" alt="Webcam Feed" />
-
-//   );
-// }
-
-// export default Webcam;
-
 import React, { useRef, useEffect, useState } from 'react';
 
 function Webcam() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [prediction, setPrediction] = useState('');
+  const [word,setWord] = useState('');
 
   // Ask for camera access and display the stream
   useEffect(() => {
@@ -32,6 +16,22 @@ function Webcam() {
       .catch((err) => {
         console.error('Error accessing webcam:', err);
       });
+
+
+      // Listen for backspace to delete latest charcher
+      const handleKeyDown = (event) => {
+        if (event.key === 'Backspace') {
+          setWord(prev => prev.slice(0, -1)); // Remove last character
+        }
+      };
+    
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+
+
+      
   }, []);
 
   // Capture and send a frame every 2 seconds
@@ -44,7 +44,8 @@ function Webcam() {
 
       const imageData = canvasRef.current.toDataURL('image/jpeg');
 
-      fetch('http://localhost:5000/predict', {
+      fetch('http://3.138.121.255:5000/predict', {
+      // fetch('https://asl-backend-26m3.onrender.com/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,6 +55,7 @@ function Webcam() {
         .then((res) => res.json())
         .then((data) => {
           setPrediction(data.character);
+          setWord(prev => prev + data.character)
         })
         .catch((err) => console.error('Prediction error:', err));
     }, 2000); // every 2 seconds
@@ -62,8 +64,9 @@ function Webcam() {
   }, []);
 
   return (
-    <div className="relative">
-      <video ref={videoRef} className="w-full h-full object-cover" />
+    <div className="items-center justify-around flex-col flex h-full w-full">
+      
+      <video ref={videoRef} className="w-full object-cover" />
 
       <canvas
         ref={canvasRef}
@@ -72,8 +75,10 @@ function Webcam() {
         style={{ display: 'none' }}
       />
 
-      <div className="absolute bottom-4 right-4 bg-white text-black p-2 rounded shadow">
-        Prediction: {prediction || '...'}
+      <div className="mt-auto flex justify-center  items-center w-full h-50  text-white p-2 rounded shadow ">
+        <div className='text-6xl text-white'>
+        {word + '...'}
+        </div>
       </div>
     </div>
   );

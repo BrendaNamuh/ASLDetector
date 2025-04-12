@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './App.css';
 import Webcam from './components/Webcam.jsx'; // Your custom webcam component
-import { Text, Card } from '@geist-ui/core';
 import { CiCamera } from "react-icons/ci";
 
 function App() {
   const [text, setText] = useState('');
   const [showWebcam, setShowWebcam] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showText, setShowText] = useState(false);
+  useEffect(() => {
+    // Trigger fade in when component mounts
+    setTimeout(() => setShowText(true), 100); // short delay to allow CSS transition
+  }, []);
+
 
   const requestCameraAccess = () => {
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -19,13 +24,17 @@ function App() {
         alert("Camera access is required to use this feature.");
       });
   };
+  useEffect(() => {
+    // Trigger fade in when component mounts
+    setTimeout(() => setShowText(true), 5000); // short delay to allow CSS transition
+  }, []);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-[#f5faf5] flex-col">
       <div className="h-[600px] w-[1300px] rounded-2xl bg-[#f5faf5] flex flex-row px-7 py-3 gap-7">
         
         {/* Webcam or Camera Button */}
-        <div className="rounded-xl border-2 w-[750px] overflow-hidden flex flex-col justify-center items-center bg-[#4986b8]">
+        <div className={`rounded-xl shadow-2xl w-[820px] overflow-hidden flex flex-col justify-center items-center bg-[#4986b85f] duration-3000 ${showText ? "opacity-100" : "opacity-0"}`}>
           {showWebcam ? (
             <Webcam setText={setText} />
           ) : (
@@ -48,25 +57,20 @@ function App() {
         </div>
 
         {/* Text + Alphabet Display */}
-        <div className="flex flex-col flex-1 rounded-2xl px-5 w-[600px]">
-          <div className="flex flex-1 flex-col h-full border-amber-600">
-            <textarea
-              placeholder="Turn on your camera and start signing to see text appear here."
-              className="box-border border-b-yellow-400 rounded-md h-[295px] py-3 px-2"
-              style={{ fontSize: "57px" }}
-              value={text}
-              autoFocus
-              readOnly
-            ></textarea>
+        <div className="flex flex-col rounded-2xl h-full px-5 w-[600px] relative ">
 
-            <div className="">
+          <div className={`mx-5 text-base/10  text-[25px] absolute top-0 left-0 h-[220px]  z-10 transition-opacity duration-3000 ${showText ? "opacity-100" : "opacity-0"} `}>
+          Hand2Text translates American Sign Language (ASL) into text using a random forest model. Click 'Turn on Camera' and start signing to see your gestures translated in real time. Press backspace to delete the last letter.
+          </div>
+
+            <div className={`mt-auto shadow-2xs h-[430px] w-full   border-[#4986b83d] translate-y-[10%] transition-opacity duration-4000 ${showText ? "opacity-100" : "opacity-0"}`} >
               <img
-                className="h-[330px] w-full"
+                className="h-full w-full "
                 src="images/asl_alphabet.jpg"
                 alt="ASL Alphabet"
               />
             </div>
-          </div>
+
         </div>
       </div>
     </div>
