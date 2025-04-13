@@ -44,7 +44,7 @@ function Webcam() {
 
       const imageData = canvasRef.current.toDataURL('image/jpeg');
 
-      fetch('http://3.138.121.255:5000/predict', {
+      fetch("https://3.138.121.255/predict", {
       // fetch('https://asl-backend-26m3.onrender.com/predict', {
         method: 'POST',
         headers: {
@@ -64,6 +64,7 @@ function Webcam() {
   }, []);
 
   return (
+    
     <div className="items-center justify-around flex-col flex h-full w-full">
       
       <video ref={videoRef} className="w-full object-cover" />
